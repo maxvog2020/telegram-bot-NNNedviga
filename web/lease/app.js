@@ -11,7 +11,7 @@ const DEPENDENT_COUNTERS = [
     ['name', 128, true],
     ['address', 128, true],
     ['description', 512, false],
-    ['price', 32, false],
+    ['price', 64, false],
     ['contacts', 128, false],
 ];
 
