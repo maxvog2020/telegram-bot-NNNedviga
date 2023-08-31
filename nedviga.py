@@ -2,12 +2,13 @@ from config import config
 import asyncio
 import logging
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import Message, WebAppInfo, KeyboardButton, CallbackQuery, InputMediaPhoto
+from aiogram.types import Message, WebAppInfo, KeyboardButton, CallbackQuery, InputMediaPhoto, FSInputFile
 from aiogram.filters import Command
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder, InlineKeyboardButton
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.strategy import FSMStrategy
 import json
+import urllib
 
 
 TOKEN = config.bot_token.get_secret_value()
@@ -28,10 +29,13 @@ async def sell_callback(message: Message, values):
     price = data['price'].strip()
     address = data['address'].strip()
     contacts = data['contacts'].strip()
+    maps = data['maps']
     telegram = data['telegram']
 
     text = f'🆕 #Продам <b>{name}</b> 🆕\n\n'
 
+    if address != "" and maps:
+        address = get_address_ref(address)
     if address != "":
         text += f'🏢 {address}\n\n'
     if description != "":
@@ -56,10 +60,13 @@ async def lease_callback(message: Message, values):
     price = data['price'].strip()
     address = data['address'].strip()
     contacts = data['contacts'].strip()
+    maps = data['maps']
     telegram = data['telegram']
 
     text = f'🆕 #Сдам <b>{name}</b> 🆕\n\n'
 
+    if address != "" and maps:
+        address = get_address_ref(address)
     if address != "":
         text += f'🏢 {address}\n\n'
     if description != "":
@@ -87,9 +94,12 @@ callbacks = {
 def get_telegram_ref(message: Message):
     return f'<a href="tg://user?id={message.from_user.id}">{message.from_user.full_name}</a>'
 
+def get_address_ref(str: str):
+    return f'<a href="https://yandex.com/maps?text={urllib.parse.quote("Нижегородская область, " + str)}">{str}</a>'
+
 async def send_with_images(chat_id, text, images):
     if images == [] or images == None:
-        return await bot.send_message(chat_id, text, parse_mode="HTML")
+        return await bot.send_message(chat_id, text, parse_mode="HTML", disable_web_page_preview=True)
 
     media = [
         InputMediaPhoto(media=images[0].photo[-1].file_id, caption=text, parse_mode="HTML")
