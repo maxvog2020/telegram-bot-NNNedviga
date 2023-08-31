@@ -13,7 +13,7 @@ import json
 TOKEN = config.bot_token.get_secret_value()
 CHAT_ID = config.chat_id.get_secret_value()
 MODER = config.moder.get_secret_value()
-WEB_PREFIX = "https://maxvog2020.github.io/telegram-bot-pristroySPnn/web"
+WEB_PREFIX = "https://maxvog2020.github.io/telegram-bot-NNNedviga/web"
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
@@ -30,14 +30,14 @@ async def sell_callback(message: Message, values):
     contacts = data['contacts'].strip()
     telegram = data['telegram']
 
-    text = f'🆕 Пристрою <b>{name}</b> 🆕\n\n'
+    text = f'🆕 Продаётся <b>{name}</b> 🆕\n\n'
 
+    if address != "":
+        text += f'🏢 {address}\n\n'
     if description != "":
         text += f'ℹ {description}\n\n'
     if price != "":
         text += f'💸 {price}\n\n'
-    if address != "":
-        text += f'🏢 {address}\n\n'
     if telegram or contacts != "":
         text += f'👤 {contacts}'
     if telegram and contacts != "":
@@ -50,9 +50,9 @@ async def sell_callback(message: Message, values):
 
 callbacks = {
     "sell": sell_callback,
-    "lease": lease_callback,
-    "buy": buy_callback,
-    "rent": rent_callback,
+    "lease": None, # lease_callback,
+    "buy": None, # buy_callback,
+    "rent": None, # rent_callback,
 }
 
 #########################
