@@ -50,6 +50,9 @@ async def sell_callback(message: Message, values):
 
 callbacks = {
     "sell": sell_callback,
+    "lease": lease_callback,
+    "buy": buy_callback,
+    "rent": rent_callback,
 }
 
 #########################
@@ -143,7 +146,10 @@ async def on_start(message: Message):
         return
 
     markup = InlineKeyboardBuilder()
-    markup.add(InlineKeyboardButton(text="Пристрою", callback_data="/"))
+    markup.add(InlineKeyboardButton(text="Продам", callback_data="/sell"))
+    markup.add(InlineKeyboardButton(text="Сдам", callback_data="/lease"))
+    markup.add(InlineKeyboardButton(text="Куплю", callback_data="/buy"))
+    markup.add(InlineKeyboardButton(text="Сниму", callback_data="/rent"))
 
     await message.answer("<b>➡️ Меню ⬅️</b>", reply_markup=markup.as_markup(), parse_mode="HTML")
     await message.delete()
