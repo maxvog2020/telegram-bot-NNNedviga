@@ -30,7 +30,35 @@ async def sell_callback(message: Message, values):
     contacts = data['contacts'].strip()
     telegram = data['telegram']
 
-    text = f'🆕 Продаётся <b>{name}</b> 🆕\n\n'
+    text = f'🆕 #Продам <b>{name}</b> 🆕\n\n'
+
+    if address != "":
+        text += f'🏢 {address}\n\n'
+    if description != "":
+        text += f'ℹ {description}\n\n'
+    if price != "":
+        text += f'💸 {price}\n\n'
+    if telegram or contacts != "":
+        text += f'👤 {contacts}'
+    if telegram and contacts != "":
+        text += f', '
+    if telegram:
+        text += get_telegram_ref(message)
+
+    await send_with_images(CHAT_ID, text, values.get('images'))
+    await send_with_images(MODER, text + '\n\n\n<b>By</b> ' + get_telegram_ref(message), values.get('images'))
+    
+async def lease_callback(message: Message, values):
+    data = values['json_data']
+
+    name = data['name'].strip()
+    description = data['description'].strip()
+    price = data['price'].strip()
+    address = data['address'].strip()
+    contacts = data['contacts'].strip()
+    telegram = data['telegram']
+
+    text = f'🆕 #Сдам <b>{name}</b> 🆕\n\n'
 
     if address != "":
         text += f'🏢 {address}\n\n'
@@ -50,7 +78,7 @@ async def sell_callback(message: Message, values):
 
 callbacks = {
     "sell": sell_callback,
-    "lease": None, # lease_callback,
+    "lease": lease_callback,
     "buy": None, # buy_callback,
     "rent": None, # rent_callback,
 }
@@ -146,10 +174,10 @@ async def on_start(message: Message):
         return
 
     markup = InlineKeyboardBuilder()
-    markup.add(InlineKeyboardButton(text="Продам", callback_data="/sell"))
-    markup.add(InlineKeyboardButton(text="Сдам", callback_data="/lease"))
-    markup.add(InlineKeyboardButton(text="Куплю", callback_data="/buy"))
-    markup.add(InlineKeyboardButton(text="Сниму", callback_data="/rent"))
+    markup.row(InlineKeyboardButton(text="Продам", callback_data="/sell"))
+    markup.row(InlineKeyboardButton(text="Сдам", callback_data="/lease"))
+    markup.row(InlineKeyboardButton(text="Куплю", callback_data="/buy"))
+    markup.row(InlineKeyboardButton(text="Сниму", callback_data="/rent"))
 
     await message.answer("<b>➡️ Меню ⬅️</b>", reply_markup=markup.as_markup(), parse_mode="HTML")
     await message.delete()
