@@ -83,10 +83,41 @@ async def lease_callback(message: Message, values):
     await send_with_images(CHAT_ID, text, values.get('images'))
     await send_with_images(MODER, text + '\n\n\n<b>By</b> ' + get_telegram_ref(message), values.get('images'))
 
+async def buy_callback(message: Message, values):
+    data = values['json_data']
+
+    name = data['name'].strip()
+    description = data['description'].strip()
+    price = data['price'].strip()
+    address = data['address'].strip()
+    contacts = data['contacts'].strip()
+    maps = data['maps']
+    telegram = data['telegram']
+
+    text = f'🆕 #Продам <b>{name}</b> 🆕\n\n'
+
+    if address != "" and maps:
+        address = get_address_ref(address)
+    if address != "":
+        text += f'🏢 {address}\n\n'
+    if description != "":
+        text += f'ℹ {description}\n\n'
+    if price != "":
+        text += f'💸 {price}\n\n'
+    if telegram or contacts != "":
+        text += f'👤 {contacts}'
+    if telegram and contacts != "":
+        text += f', '
+    if telegram:
+        text += get_telegram_ref(message)
+
+    await send_with_images(CHAT_ID, text, values.get('images'))
+    await send_with_images(MODER, text + '\n\n\n<b>By</b> ' + get_telegram_ref(message), values.get('images'))
+
 callbacks = {
     "sell": sell_callback,
     "lease": lease_callback,
-    "buy": None, # buy_callback,
+    "buy": buy_callback,
     "rent": None, # rent_callback,
 }
 
