@@ -15,7 +15,6 @@ const DEPENDENT_COUNTERS = [
     ['contacts', 128, false],
 ];
 
-
 function toggleBlock() {
     let reds = document.getElementsByClassName(COLOR_RED);
     if (reds.length > 0) {
@@ -87,6 +86,7 @@ window.onload = () => {
             address: document.getElementById('address').value,
             contacts: document.getElementById('contacts').value,
             image_count: document.getElementById('image_count').value,
+            maps: document.getElementById('maps').checked,
             telegram: document.getElementById('telegram').checked,
             callback: "sell",
         };
