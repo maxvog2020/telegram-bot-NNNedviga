@@ -258,7 +258,7 @@ async def get_menu(message: Message):
     markup.row(InlineKeyboardButton(text="Куплю", callback_data="/buy"))
     markup.row(InlineKeyboardButton(text="Сниму", callback_data="/rent"))
 
-    await message.answer("<b>➡️ Меню ⬅️</b>", reply_markup=markup.as_markup(), parse_mode="HTML")
+    await message.answer("<b>☰ Меню</b>", reply_markup=markup.as_markup(), parse_mode="HTML")
 
 #########################
 async def main():
